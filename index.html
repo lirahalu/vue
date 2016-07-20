@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,57 +9,49 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-    <link rel="stylesheet" href="sm.css">
-    <link rel="stylesheet" href="sm-extend.css">
-    <link rel="stylesheet" href="style.css">
-</head>
 
+
+</head>
 <body>
 <div class="page-group">
     <div class="page page-current">
-        <header class="bar bar-nav">
-            <a class="icon icon-search pull-left open-panel"></a>
-            <h1 class="title">WEATHER</h1>
-        </header>
-        <!-- 这里是页面内容区 -->
+
         <div class="content">
             <div class="content-padded"  id="main">
                 <div>
                     <!--城市名-->
-                    <span id="cityname">{{ json.basic.city }}</span>
+                    <span id="cityname">{{ js.basic.city }}</span>
                     <!-- 数据更新的当地时间 -->
                     <div class='update-time'>
                         <span id="update-loc">{{now}}更新</span>
                     </div>
                     <!-- 空气质量指数 -->
                     <div class='aqi-qlty'>
-                        <span id="api">{{ json.aqi.city.aqi }}</span>
+                        <span id="api">{{ js.aqi.city.aqi }}</span>
                         <!-- 空气质量类别 -->
-                        <span id="aqi-qlty">{{ json.aqi.city.qlty }}</span>
+                        <span id="aqi-qlty">{{ js.aqi.city.qlty }}</span>
                     </div>
                 </div>
                 <div class="clearfix now">
                     <span id="now-cond-icon"></span>
                     <!-- 当前温度(摄氏度) -->
-                    <span id="now-tmp">{{json.now.tmp}}&#8451;</span>
+                    <span id="now-tmp">{{js.now.tmp}}&#8451;</span>
                 </div>
                 <div class='row clearfix center'>
                     <div class="col-50">
                         <!-- 风向(方向) -->
-                        <span id="now-wind-dir">{{json.now.wind.dir}}
+                        <span id="now-wind-dir">{{js.now.wind.dir}}
                         </span>
                         <!-- 风力等级 -->
-                        <span id="now-wind-sc">{{json.now.wind.sc}}
+                        <span id="now-wind-sc">{{js.now.wind.sc}}
                         </span>
                         <span class="now-wind-sc-title"></span>
                     </div>
                     <div class="col-50">
-                        <!-- 天气代码 -->
-                        <span id="now-cond-code" style="display: none"></span>
                         <!-- 天气描述 -->
-                        <span id="now-cond-txt">{{json.now.cond.txt}}湿度</span>
+                        <span id="now-cond-txt">{{js.now.cond.txt}}湿度</span>
                         <!-- 湿度(%) -->
-                        <span id="now-hum">{{json.now.hum}}%</span>
+                        <span id="now-hum">{{js.now.hum}}%</span>
 
                     </div>
                 </div>
@@ -68,299 +59,52 @@
 
             </div>
 
-            <div class="card" id="week" v-for="day in week">
-                <div class="card-header">{{ day.date }}</div>
-                <div class="card-content">
-                    <div class="card-content-inner">
-                        <div class="row">
-                            <div class="col-50">{{ day.tmp.min}}&#8451;&#8764;{{day.tmp.max}}&#8451;</div>
-                            <div class="col-50">{{ day.cond.txt_n}}&#160;转&#160;{{day.cond.txt_d}}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
+
 <div class="panel panel-left panel-reveal">
 
     <div class="search-input">
         <label class="icon icon-search" for="city"></label>
-        <input type="search" id='city'  placeholder='输入关键字...'/>
+        <input type="search" id='city' placeholder='输入关键字...'/>
     </div>
 
-    <a class="button button-round" id="confirm" data-inline="true" href="">
-        查询
-    </a>
-    <div id="tip">
-    </div>
-    <div class="clearfix">
-        <ul class="citylist">
-            <li>北京</li>
-            <li>上海</li>
-            <li>天津</li>
-            <li>重庆</li>
-            <li>广州</li>
-            <li>杭州</li>
-            <li>深圳</li>
-            <li>南京</li>
-            <li>武汉</li>
-            <li>成都</li>
-            <li>嘉兴</li>
-            <li>宁波</li>
-            <li>绍兴</li>
-            <li>温州</li>
-            <li>海盐</li>
-        </ul>
-    </div>
-    <!-- Click on link with "close-panel" class will close panel -->
-    <p><a href="#" class="close-panel button">关闭</a></p>
+        <a class="button button-round" id="confirm" data-inline="true" href="">
+            查询
+        </a>
+        <div id="tip">
+        </div>
+        <!--<div class="clearfix">
+            <ul class="citylist">
+                <li>北京</li>
+                <li>上海</li>
+                <li>天津</li>
+                <li>重庆</li>
+                <li>广州</li>
+                <li>杭州</li>
+                <li>深圳</li>
+                <li>南京</li>
+                <li>武汉</li>
+                <li>成都</li>
+                <li>嘉兴</li>
+                <li>宁波</li>
+                <li>绍兴</li>
+                <li>温州</li>
+                <li>海盐</li>
+            </ul>
+        </div>-->
+        <!-- Click on link with "close-panel" class will close panel -->
+
 
 </div>
 
 
 
-
-<script src="js/zepto.min.js"></script>
-<script src="js/vue.js"></script>
-<script>
-
-
-    $(function() {//取本地存储，存储上次查询的城市，在每次软件开启的时候自动查询
-        if (!localStorage.getItem("city")) {
-            localStorage.setItem("city", '嘉兴');
-            $('#city').val(localStorage.getItem("city"));
-        } else {
-            $('#city').val(localStorage.getItem("city"));
-        }
-        $('#confirm').trigger("click");
-    });
-
-
-
-    $(function() {//回车事件设置默认为查询
-        document.onkeydown = function(e) {
-            var ev = document.all ? window.event: e;
-            if (ev.keyCode == 13) {
-                $('#confirm').trigger("click");
-            }
-        }
-    });
-
-
-
-    $("#confirm").on('click', function() {
-        //存储查询的城市名
-        localStorage.setItem("city", $('#city').val());
-        //ajax查询数据
-        $.ajax({
-            type: "GET",
-            url: "https://api.heweather.com/x3/weather",
-            data: {
-                city: $('#city').val(),
-                'key': 'bb3b0349f73b481288ab058cc22d9d3b'
-            },
-            dataType: "json",
-            success: function(data) {
-                //var json=null;
-                var json = data["HeWeather data service 3.0"][0];
-                if (data["HeWeather data service 3.0"][0].status == "ok") {//如果返回状态成功则执行
-                    $("#tip").html('');//提示为空
-
-
-                    new Vue({
-                        el:'#main',
-                        data:{
-                            json:json,
-                            now:json.basic.update.loc.substring(11, 17)
-                        }
-                    });
-                    //空气质量查询
-                    //alert(ve.$data.json.basic.city)
-
-                    var x = Math.ceil(json.aqi.city.aqi / 50);
-                    var api = $('.aqi-qlty');
-                    switch (x) {
-                        case 1:
-                            //0~50优可正常活动
-                            api.css("background-color", "rgb(0,245,61)");
-                            break;
-                        case 2:
-                            //51~100良
-                            api.css("background-color", "rgb(230,210,0)");
-                            break;
-                        case 3:
-                            //101~150轻度污染
-                            api.css("background-color", "rgb(255,204,0)");
-                            break;
-                        case 4:
-                            //151~200轻度污染
-                            api.css("background-color", "rgb(255,204,0)");
-                            break;
-                        case 5:
-                            //值大于200表明空气质量差，称之为中度污染
-                            api.css("background-color", "rgb(255,0,0)");
-                            break;
-                        case 6:
-                            //值大于200表明空气质量差，称之为中度污染
-                            api.css("background-color", "rgb(255,0,0)");
-                            break;
-                        case 7:
-                            //大于300表明空气质量极差，已严重污染
-                            api.css("background-color", "rgb(0,0,0)");
-                            break;
-                        default:
-                            api.css("background-color", "rgb(0,245,61)");
-                    }
-                    //风力描述，如果是数字则显示“级”，如果是文字则不加
-                    var value = json.now.wind.sc.replace(/[^0-9]/ig,"");
-                    if(!!value){
-                        $('.now-wind-sc-title').html("级");
-                    }else{
-                        $('.now-wind-sc-title').html("");
-                    }
-
-                    $('#now-cond-code').html(json.now.cond.code);
-
-                    var cond = $('.content');
-                    switch (parseInt(json.now.cond.code)) {
-                        case 100:
-                            //晴
-                            cond.css("background-color", "#80D4FF");
-                            break;
-                        case 101:
-                            //多云
-                            cond.css("background-color", "#33BBFF");
-                            break;
-                        case 102:
-                            //少云
-                            cond.css("background-color", "#4DC3FF");
-                            break;
-                        case 103:
-                            //晴间多云
-                            cond.css("background-color", "#E6E6E6");
-                            break;
-                        case 104:
-                            //阴
-                            cond.css("background-color", "#D6D6D6");
-                            break;
-                        case 300:
-                            //阵雨
-                            cond.css("background-color", "#C9C9C9");
-                            break;
-                        case 301:
-                            //强阵雨
-                            cond.css("background-color", "#BDBDBD");
-                            break;
-                        case 302:
-                            //雷阵雨
-                            cond.css("background-color", "#B0B0B0");
-                            break;
-                        case 303:
-                            //强雷阵雨
-                            cond.css("background-color", "#A3A3A3");
-                            break;
-                        case 304:
-                            //雷阵雨伴有冰雹
-                            cond.css("background-color", "#A3A3A3");
-                            break;
-                        case 305:
-                            //小雨
-                            cond.css("background-color", "#A3A3FF");
-                            break;
-                        case 306:
-                            //中雨
-                            cond.css("background-color", "#8A8AFF");
-                            break;
-                        case 307:
-                            //大雨
-                            cond.css("background-color", "#7070FF");
-                            break;
-                        case 308:
-                            //极端降雨
-                            cond.css("background-color", "#5757FF");
-                            break;
-                        case 309:
-                            //毛毛雨/细雨
-                            cond.css("background-color", "#3D3DFF");
-                            break;
-                        case 310:
-                            //暴雨
-                            cond.css("background-color", "#2424FF");
-                            break;
-                        case 311:
-                            //大暴雨
-                            cond.css("background-color", "#0A0AFF");
-                            break;
-                        case 312:
-                            //特大暴雨
-                            cond.css("background-color", "#0000D6");
-                            break;
-                        default:
-                            cond.css("background-color", "#00CCA3");
-                            break;
-                    }
-                    //未来7天
-                    var vm= new Vue({
-                        el:'#week',
-                        data:{
-                            week:json.daily_forecast
-                        }
-                    });
-
-
-                } else {
-                    $("#tip").html('城市名称不对');
-                }
-
-                //发送请求，读取图片
-
-
-            }
-        });
-
-        $.ajax({
-            type: "GET",
-            url: "https://api.heweather.com/x3/condition",
-            data: {
-                search: 'allcond',
-                'key': 'bb3b0349f73b481288ab058cc22d9d3b'
-            },
-            dataType: "json",
-            success: function(data) {
-                if (data.status = "ok") {
-                    for (var i = 0; i < data.cond_info.length; i++) {
-                        var code = $('#now-cond-code');
-                        if (code.html() == data.cond_info[i].code) {
-                            $('#now-cond-icon').html("<img src=" + data.cond_info[i].icon + ">");
-
-                            $('#now-cond-code').html('');
-                        }
-                    }
-                }
-            }
-        });
-
-    });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</script>
+<script type='text/javascript' src='zepto.min.js' charset='utf-8'></script>
+<script type='text/javascript' src='sm.js' charset='utf-8'></script>
+<script type='text/javascript' src='sm-extend.js' charset='utf-8'></script>
+<script type='text/javascript' src='vue.js' charset='utf-8'></script>
+<script src="main.js" charset="utf-8" type="text/javascript" language="javascript"></script>
 </body>
-
-
 </html>
